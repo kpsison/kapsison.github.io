@@ -1,16 +1,61 @@
-<!DOCTYPE html>
-
+﻿<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>test</title>
+<head>
+    <meta charset="utf-8" />
+    <title>Students</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 </head>
 <body>
+    <h1>Select a Major</h1>
+    <input type="button" onclick="getData('CIT')" value="CIT Majors" />
+    <input type="button" onclick="getData('BUS')" value="Business Majors" />
 
-    <h1>Github Test Page</h1>
-    
-    <p>Hello Github!</p>
-    
+    <h2>We filter our dataset by major</h2>
+    <div id="studentTable"></div>
+
+    <!-- Handlebars template -->
+    <script type="text/x-handlebars-template" id="tableTemplate">
+        <table style="width: 17%;">
+            <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
+            {{#each rows}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{major}}</td>
+                <td>{{midterm}}</td>
+                <td>{{final}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+
+    <!-- application ajax code -->
+    <script>
+
+        function getData(selected_major) {      // called when a button is clicked. paramter selected_major = breakfast, lunch, or dinner
+            var request = new XMLHttpRequest();
+            request.open('GET', 'cit5students.json');      // open Ajax request for data file cit5students.json
+
+            request.onload = function () {                     // when the data comes back, browser calls this function
+                var data = JSON.parse(request.responseText);    // convert json to javascript array of objects
+
+                student_items = data.filter(getMajor)       // meal_itmes array will contain the filtered data using the getMeal() function
+                function getMajor(item) {
+                    return item.major == selected_major;   // the new student_items array will contain only items for the selected meal
+                }
+
+                if (request.status == 200) {    // if all is well as data returns, then compile and populate the template
+                    var templateText = document.getElementById('tableTemplate').innerHTML;
+                    var compiledTemplateText = Handlebars.compile(templateText);
+                    compiledHtml = compiledTemplateText({ rows: student_items })
+                    document.getElementById('studentTable').innerHTML = compiledHtml;
+                }
+                else {
+                    document.querySelector('#studentTable').innerHTML = "There was an error, or menu items not found";
+                }
+            }
+
+            request.send(null);
+        }
+    </script>
 </body>
-
 </html>
