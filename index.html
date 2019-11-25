@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8" />
@@ -13,7 +14,7 @@
     <h2>We filter our dataset by major</h2>
     <div id="studentTable"></div>
 
-    <!-- Handlebars template -->
+    <!-- Handlebars Template -->
     <script type="text/x-handlebars-template" id="tableTemplate">
         <table style="width: 17%;">
             <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
@@ -28,22 +29,22 @@
         </table>
     </script>
 
-    <!-- application ajax code -->
+    <!-- Application Ajax Code -->
     <script>
 
-        function getData(selected_major) {      // called when a button is clicked. paramter selected_major = breakfast, lunch, or dinner
+        function getData(selected_major) {      
             var request = new XMLHttpRequest();
-            request.open('GET', 'cit5students.json');      // open Ajax request for data file cit5students.json
+            request.open('GET', 'cit5students.json');      
 
-            request.onload = function () {                     // when the data comes back, browser calls this function
-                var data = JSON.parse(request.responseText);    // convert json to javascript array of objects
+            request.onload = function () {                     
+                var data = JSON.parse(request.responseText);    
 
-                student_items = data.filter(getMajor)       // meal_itmes array will contain the filtered data using the getMeal() function
+                student_items = data.filter(getMajor)       
                 function getMajor(item) {
-                    return item.major == selected_major;   // the new student_items array will contain only items for the selected meal
+                    return item.major == selected_major;   
                 }
 
-                if (request.status == 200) {    // if all is well as data returns, then compile and populate the template
+                if (request.status == 200) {    
                     var templateText = document.getElementById('tableTemplate').innerHTML;
                     var compiledTemplateText = Handlebars.compile(templateText);
                     compiledHtml = compiledTemplateText({ rows: student_items })
@@ -57,5 +58,6 @@
             request.send(null);
         }
     </script>
+
 </body>
 </html>
